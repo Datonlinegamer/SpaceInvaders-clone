@@ -2,18 +2,22 @@
 
 #include "raylib.h"
 #include "SpaceShipBase.h"
-class Invader : SpaceShipBase
+class Invader 
 {
 public:
     Vector2 position;
     int width;
     int height;
     Color color;
-    bool active;
+    
     bool movingRight;
     float speed;
-    Invader(float startX, float startY, int w, int h, Color c);
-    void Move() override;
-    void Draw() override;
-    
+    Invader(int startX,int startY, int w, int h, Color c);
+    bool getActive();
+    void setInActive();
+    void Move();
+    void Draw();
+private:
+    bool active;
+
 };

@@ -1,13 +1,13 @@
 #pragma once
-class SpaceShip;
-#include "Game.h"
-#include "SpaceShipBase.h"
 
+#include "MainMenu.h"
+#include "Game.h"
 class GameSetUp 
 {
 public:
+	
 	void Run();
 	bool Runing;
 private:
-	Game ThisGame;
+	Game thisGame;
 };

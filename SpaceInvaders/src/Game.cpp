@@ -2,13 +2,21 @@
 #include <raylib.h>
 #include "Ship.h"
 #include "Invaders.h"
+#include "MainMenu.h"
 
+const int shipWidth = 50;
+const int shipHeight = 10;
+const float PositionX = 400.0f;
+const float PositionY = 550.0f;
 Game::Game()
 {
- ship = new Ship{ 400, 550, 50, 10, BLUE };
+    state = GameState::Menu;
+ ship = new Ship{ PositionX, PositionY, shipWidth, shipHeight, BLUE };
 
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 11; j++) {
+    for (int i = 0; i < 5; i++) 
+    {
+        for (int j = 0; j < 11; j++) 
+        {
             invaders.push_back(Invader(50 + j * 50, 50 + i * 50, 40, 20, RED));
         }
     }
@@ -19,57 +27,94 @@ Game::~Game()
 }
 void Game::Draw()
 {
-    ship->Draw();
-    for (auto& bullet : bullets)
+    switch (state)
     {
-        bullet.Draw();
-    }
+    case GameState::Menu:
+        m_Menu->Draw();
+        break;
+    case GameState::Playing:
+        ship->Draw();
 
-    for (auto& invader : invaders)
-    {
-        invader.Draw();
+        for (auto& bullet : bullets)
+        {
+            bullet.Draw();
+        }
+
+        for (auto& invader : invaders)
+        {
+            invader.Draw();
+        }
+        break;
+    case GameState::Exit:
+    default:
+        break;
     }
 }
 
 
-void HandleCollisions(std::vector<Bullet>& bullets, std::vector<Invader>& invaders) {
-    for (auto& bullet : bullets) 
+void Game::HandleCollisions(std::vector<Bullet>& bullets, std::vector<Invader>& invaders) 
+{
+    for (auto& bullet : bullets)
     {
-        if (bullet.active) 
+        if (bullet.getActive())
         {
-            for (auto& invader : invaders) 
+            for (auto& invader : invaders)
             {
-                if (invader.active) {
-                    Rectangle bulletRect = { bullet.position.x, bullet.position.y, bullet.width, bullet.height };
-                    Rectangle invaderRect = { invader.position.x, invader.position.y, invader.width, invader.height };
+                if (invader.getActive())
+                {
+                    Rectangle bulletRect = { (float)bullet.position.x,(float) bullet.position.y,(float) bullet.width,(float) bullet.height };
+                    Rectangle invaderRect = { (float)invader.position.x,(float) invader.position.y, (float)invader.width,(float) invader.height };
 
-                
-                    DrawRectangleLines(bulletRect.x, bulletRect.y, bulletRect.width, bulletRect.height, RED);
-                    DrawRectangleLines(invaderRect.x, invaderRect.y, invaderRect.width, invaderRect.height, BLUE);
 
-                    if (CheckCollisionRecs(bulletRect, invaderRect)) 
+
+
+                    if (CheckCollisionRecs(bulletRect, invaderRect))
                     {
-                        bullet.active = false;
-                        invader.active = false;
+                        bullet.SetInActive();
+                        invader.setInActive();
                     }
+
+                    if (ship->getActive())
+                    {
+                        Rectangle shipRec = { (float)ship->position.x,(float)ship->position.y,(float)ship->width, (float)ship->height };
+
+                        if (CheckCollisionRecs(shipRec, invaderRect))
+                        {
+                            ship->getInActive();
+                            if (ship->getInActive())
+                            {
+                                                   
+                            }
+                        }
+                    }
+
                 }
             }
         }
     }
 }
+                            
 
-
-
-
+void Game::SetWidthAndHeight(int width, int height)
+{
+    m_Menu->SetSize(width,height);
+}
 
 void Game::Update()
 {
-    ship->Move();
+    switch (state)
+    {
+    case GameState::Menu:
+
+       m_Menu->UpDate();
+        break;
+    case GameState::Playing:
 
     if (IsKeyPressed(KEY_SPACE))
     {
         bullets.push_back(Bullet(ship->position.x + ship->width / 2 - 2, ship->position.y, 5, 10, WHITE));
     }
+    
     for (auto& bullet : bullets)
     {
         bullet.Move();
@@ -79,5 +124,14 @@ void Game::Update()
         invader.Move();
     }
        HandleCollisions(bullets, invaders);
+    
+        break;
+    case Exit:
+        break;
+    default:
+        break;
+    }
+    ship->Move();
+  
 }
 

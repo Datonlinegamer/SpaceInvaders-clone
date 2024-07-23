@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -137,6 +137,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Invaders.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\MainMenu.cpp" />
     <ClCompile Include="src\Setup.cpp" />
     <ClCompile Include="src\Ship.cpp" />
     <ClCompile Include="src\SpaceShipBase.cpp" />
@@ -145,12 +146,12 @@
     <ClInclude Include="src\Bullet.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Invaders.h" />
+    <ClInclude Include="src\MainMenu.h" />
     <ClInclude Include="src\SetUp.h" />
     <ClInclude Include="src\Ship.h" />
     <ClInclude Include="src\SpaceShipBase.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Graphics\Craft.png" />
     <Image Include="Graphics\FACE.png" />
     <Image Include="Graphics\Ship.jpg" />
     <Image Include="x64\Graphics\Ship.jpg" />

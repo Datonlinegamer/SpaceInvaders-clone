@@ -3,7 +3,7 @@
 
 
 Ship::Ship(float startX, float startY, int w, int h, Color c)
-	: SpaceShipBase(startX, startY, w, h, c)
+    : SpaceShipBase(startX, startY, w, h, c), active( true )
 {
 
 }
@@ -12,11 +12,11 @@ keyinput Ship::GetPressedKey()
 {
     if (IsKeyDown(KEY_A))
     {
-        return keyright;
+        return keyleft;
     }
     if (IsKeyDown(KEY_D))
     {
-        return keyleft;
+        return keyright;
     } 
     return key;
 }
@@ -25,25 +25,44 @@ void Ship::Move()
 {
     switch (GetPressedKey())
     {
-    case keyright:
+    case keyleft:
         position.x -= 5.0f;
         break;
-    case keyleft:
+    case keyright:
         position.x += 5.0f;
         break;
     case key :
-        // No movement
+    
         break;
     }
 
-    // Ensure the player stays within the screen bounds
-    if (position.x < 0) position.x = 0;
-    if (position.x > GetScreenWidth() - width) position.x = GetScreenWidth() - width;
+
+    if (position.x < 0)
+    {
+        position.x = 0;
+    }
+    if (position.x > GetScreenWidth() - width)
+    {
+     position.x = GetScreenWidth() - width;
+    }
 
     
 }
 
 void Ship::Draw()
 {
-    DrawRectangle(position.x, position.y, width, height, color);
+    if (getActive())
+    {
+        DrawRectangle(position.x, position.y, width, height, color);
+    }
+}
+
+bool Ship::getActive()
+{
+    return active;
+}
+
+bool Ship::getInActive()
+{
+    return active = false;
 }

@@ -1,17 +1,22 @@
 #pragma once
 #include "raylib.h"
 #include "SpaceShipBase.h"
-class Bullet : SpaceShipBase
+class Bullet
 {
 public:
     Vector2 position;
     int width;
     int height;
     Color color;
-    bool active;
-
+    
+    bool getActive();
+    void SetInActive();
     Bullet();
     Bullet(float startX, float startY, int w, int h, Color c);
-   virtual void Move();
-   virtual void Draw();
+    void Move();
+    void Draw();
+
+private:
+    bool active;
+    bool inActive;
 };

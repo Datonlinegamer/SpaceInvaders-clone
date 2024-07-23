@@ -1,13 +1,26 @@
 #include "Invaders.h"
 
-Invader::Invader(float startX, float startY, int w, int h, Color c):
-    movingRight{ false }, speed{3.0f}
+Invader::Invader(int startX, int startY, int w, int h, Color c)
+    :movingRight(false) 
+    ,speed(3.0f)
+    ,active(true)
+    ,width(w)
+    ,height(h)
+    ,color(c)
 {
-    position = { startX, startY };
-    width = w;
-    height = h;
-    color = c;
-    active = true;
+    position = {(float) startX,(float) startY };
+    
+    
+}
+
+bool Invader::getActive()
+{
+    return active;
+}
+
+void Invader::setInActive()
+{
+     active = false;
 }
 
 void Invader::Move() 
@@ -37,6 +50,6 @@ void Invader::Draw()
 {
     if (active) 
     {
-        DrawRectangle(position.x, position.y, width, height, color);
+        DrawRectangle((float)position.x, (float)position.y,(float) width, (float)height, color);
     }
 }
