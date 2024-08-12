@@ -10,17 +10,21 @@ enum GameMenu
 class MainMenu
 {	
 public:
-	MainMenu(){}
+	MainMenu();
 	int screenWidth;
 	int screenHeight;
 	GameMenu currentScreen;
-	int selectedItem;
-	MainMenu(int height, int width);
+	MainMenu(int width, int height);
 	~MainMenu() {}
 	bool ShouldExit();
-	Game Level;
 	void Draw();
 	bool WindowShouldClose();
 	void UpDate();
+	bool GetPlayerSelected() const{ return Playerselected; }
+	int GetPlayerSelection() const { return selectedItem; }
 	void SetSize(int width, int height);
+private:
+	bool Playerselected;
+	int selectedItem;
+	
 };

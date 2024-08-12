@@ -9,5 +9,6 @@ public:
 	void Run();
 	bool Runing;
 private:
-	Game thisGame;
+	
+	Game game;
 };

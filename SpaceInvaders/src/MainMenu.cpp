@@ -2,40 +2,45 @@
 #include "raylib.h"
 #include "Game.h"
 
+MainMenu::MainMenu()
+    :selectedItem(1)
+    , screenHeight(100)
+    , screenWidth(100)
+    ,Playerselected(false)
+{
+
+}
 MainMenu::MainMenu(int width, int height)
     : screenWidth(width)
     , screenHeight(height)
-    , currentScreen(Title)
-    , selectedItem(0)
+    , selectedItem(1)
+    ,Playerselected(false)
 {
- 
+   
 }
 
-bool MainMenu::ShouldExit()
-{
-    return currentScreen ==Quit;
-}
+
 
 void MainMenu::Draw()
 {
   
-    ClearBackground(RAYWHITE);
+    ClearBackground(BLACK);
 
-    if (currentScreen == Title)
+    //if (currentScreen == GameMenu::Title)
     {
-        DrawText("Space Invaders", screenWidth / 2- MeasureText("Space Invaders", 20), screenHeight / 4, 40, DARKGRAY);
-        DrawText("Start Game", screenWidth / 2 - MeasureText("Start Game", 20) / 2, screenHeight / 2 - 30, 20, selectedItem == 0 ? RED : DARKGRAY);
-        DrawText("Exit", screenWidth / 2 - MeasureText("Exit", 20) / 2, screenHeight / 2 + 30, 20, selectedItem == 2 ? RED : DARKGRAY);
+        DrawText("Space Invaders", screenWidth / 4, screenHeight / 4,  40, BLUE);
+        DrawText("1. Start Game", screenWidth  / 4, screenHeight / 4  + 40, 20, selectedItem ==1 ? RED : DARKGRAY);
+        DrawText("2. Exit", screenWidth  / 4, screenHeight / 4 + 80, 20, selectedItem == 2 ? RED : DARKGRAY);
     }
-    else if (currentScreen == startGame)
-    {
-        DrawText("Gameplay Screen", screenWidth / 2 - MeasureText("Gameplay Screen", 20) / 2, screenHeight / 2, 20, DARKGRAY);
-     
-        
+    //else if (currentScreen == GameMenu::startGame)
+    //{
+    //    DrawText("Gameplay Screen", screenWidth  / 2, screenHeight / 2, 20, DARKGRAY);
+    // 
 
-         Level.Draw();
-        
-    }
+
+    //    //       level.Draw();
+    //    
+    //}
 
 }
 void MainMenu:: SetSize(int width, int height)
@@ -50,7 +55,7 @@ bool MainMenu::WindowShouldClose()
 
 void MainMenu::UpDate()
 {
-    if (currentScreen ==Title)
+   // if (currentScreen == GameMenu::Title)
     {
         if (IsKeyPressed(KEY_DOWN))
         {
@@ -72,12 +77,18 @@ void MainMenu::UpDate()
 
         if (IsKeyPressed(KEY_ENTER))
         {
-            switch (selectedItem)
+            Playerselected = true;
+          /*  switch (selectedItem)
             {
-            case 0: currentScreen = startGame; break;
-            case 1: break; 
-            case 2: currentScreen = Quit; break;
-            }
+            case 1:
+              currentScreen = GameMenu::startGame;
+                break; 
+            case 2: currentScreen = GameMenu::Quit;
+                break;
+                
+            default:
+                break;
+            }*/
         }
     }
 }

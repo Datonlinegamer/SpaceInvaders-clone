@@ -8,7 +8,7 @@ void GameSetUp::Run()
     const int screenWidth = 800;
     const int screenHeight = 600;
     InitWindow(screenWidth, screenHeight, "Space Invaders");
-    thisGame.SetWidthAndHeight(screenWidth, screenHeight);
+    game.SetWidthAndHeight(screenWidth, screenHeight);
     
    
 
@@ -20,8 +20,9 @@ void GameSetUp::Run()
         BeginDrawing();
         ClearBackground(BLACK);
        
-        thisGame.Draw();
-        thisGame.Update();
+        game.Draw();
+     
+         game.Update();
 
         
 

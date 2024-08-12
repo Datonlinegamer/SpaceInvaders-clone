@@ -4,9 +4,5 @@
 GameSetUp runGame;
 int main()
 { 
-	
-	
 	runGame.Run();
-
-	
 }

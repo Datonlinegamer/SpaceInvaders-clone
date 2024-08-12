@@ -10,8 +10,9 @@ const float PositionX = 400.0f;
 const float PositionY = 550.0f;
 Game::Game()
 {
-    state = GameState::Menu;
- ship = new Ship{ PositionX, PositionY, shipWidth, shipHeight, BLUE };
+   m_Menu = new MainMenu();
+    //state = GameState::Menu;
+ ship = new Ship( PositionX, PositionY, shipWidth, shipHeight, BLUE );
 
     for (int i = 0; i < 5; i++) 
     {
@@ -23,7 +24,10 @@ Game::Game()
 }
 Game::~Game()
 {
+    delete m_Menu;
+    m_Menu = nullptr;
     delete ship;
+    ship = nullptr;
 }
 void Game::Draw()
 {
@@ -32,9 +36,10 @@ void Game::Draw()
     case GameState::Menu:
         m_Menu->Draw();
         break;
+
     case GameState::Playing:
         ship->Draw();
-
+        DrawText("Level 1", 0/ 2, 0 / 4, 40, WHITE);
         for (auto& bullet : bullets)
         {
             bullet.Draw();
@@ -45,11 +50,14 @@ void Game::Draw()
             invader.Draw();
         }
         break;
+
     case GameState::Exit:
     default:
         break;
     }
 }
+
+
 
 
 void Game::HandleCollisions(std::vector<Bullet>& bullets, std::vector<Invader>& invaders) 
@@ -107,6 +115,14 @@ void Game::Update()
     case GameState::Menu:
 
        m_Menu->UpDate();
+       if (m_Menu->GetPlayerSelected())
+       {
+           if (m_Menu->GetPlayerSelection() ==1)
+           {
+             state = GameState::Playing;
+
+           }
+       }
         break;
     case GameState::Playing:
 
@@ -114,16 +130,18 @@ void Game::Update()
     {
         bullets.push_back(Bullet(ship->position.x + ship->width / 2 - 2, ship->position.y, 5, 10, WHITE));
     }
-    
+ 
     for (auto& bullet : bullets)
     {
         bullet.Move();
     }
+  
     for (auto& invader : invaders)
     {
         invader.Move();
     }
-       HandleCollisions(bullets, invaders);
+       
+    HandleCollisions(bullets, invaders);
     
         break;
     case Exit:
