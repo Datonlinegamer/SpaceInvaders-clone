@@ -3,10 +3,15 @@
 #include "Game.h"
 
 MainMenu::MainMenu()
-    :selectedItem(1)
+    :selectedItem(Selected::One)
     , screenHeight(100)
     , screenWidth(100)
     ,Playerselected(false)
+    ,textPositionX(4)
+    ,textPositionY(5)
+    ,startGameTextPositionY(4)
+    ,exitGameTextPositionY(4)
+    ,textSize(40)
 {
 
 }
@@ -28,9 +33,9 @@ void MainMenu::Draw()
 
     //if (currentScreen == GameMenu::Title)
     {
-        DrawText("Space Invaders", screenWidth / 4, screenHeight / 4,  40, BLUE);
-        DrawText("1. Start Game", screenWidth  / 4, screenHeight / 4  + 40, 20, selectedItem ==1 ? RED : DARKGRAY);
-        DrawText("2. Exit", screenWidth  / 4, screenHeight / 4 + 80, 20, selectedItem == 2 ? RED : DARKGRAY);
+        DrawText("Space Invaders", screenWidth / textPositionX, screenHeight / textPositionY, textSize, BLUE);
+        DrawText("1. Start Game", screenWidth  / textPositionX, screenHeight / startGameTextPositionY  + textSize, 20, selectedItem ==Selected::One ? RED : DARKGRAY);
+        DrawText("2. Exit", screenWidth  / textPositionX, screenHeight /exitGameTextPositionY + 80, 20, selectedItem == 2 ? RED : DARKGRAY);
     }
     //else if (currentScreen == GameMenu::startGame)
     //{
@@ -66,13 +71,13 @@ void MainMenu::UpDate()
         {
             selectedItem--;
         }
-        if (selectedItem > 2)
+        if (selectedItem > Selected::Two)
         {
-            selectedItem = 0;
+            selectedItem = Selected::Zero;
         }
-        if (selectedItem < 0)
+        if (selectedItem < Selected::Zero)
         {
-            selectedItem = 2;
+            selectedItem = Selected::Two;
         }
 
         if (IsKeyPressed(KEY_ENTER))

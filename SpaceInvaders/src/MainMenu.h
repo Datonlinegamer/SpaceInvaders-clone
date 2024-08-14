@@ -1,6 +1,11 @@
 #pragma once
 #include "Game.h"
-
+enum Selected
+{
+	Zero=0,
+	One =1,
+	Two =2
+};
 enum GameMenu
 {
 	Title,
@@ -26,5 +31,11 @@ public:
 private:
 	bool Playerselected;
 	int selectedItem;
+	int textPositionX;
+	int textPositionY;
+	int startGameTextPositionY;
+	int exitGameTextPositionY;
+	int textSize;
+	
 	
 };
