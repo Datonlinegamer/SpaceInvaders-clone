@@ -11,6 +11,10 @@ enum GameState
 {
     Menu,
     Playing,
+    LevelTransition,
+    PlayerControls,
+    GameOver,
+    GoBackToMainMenu,
     Exit
 };
 
@@ -22,7 +26,7 @@ public:
     std::vector<Bullet> bullets;
     std::vector<Invader> invaders;
     MainMenu* m_Menu;
-    
+    Invader* invader;
 
     Game();
     ~Game();
@@ -32,9 +36,10 @@ public:
 
     void SetWidthAndHeight(int width, int height);
 private:
- 
-   
- 
+    int level;
+    void StartLevel(int level);
+    void CheckLevel();  
+    bool allInvadersDefeated;
   
 };
 
