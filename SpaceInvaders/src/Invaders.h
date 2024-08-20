@@ -2,6 +2,8 @@
 
 #include "raylib.h"
 #include "SpaceShipBase.h"
+#include <vector>
+class Game;
 class Invader 
 {
 public:
@@ -17,7 +19,19 @@ public:
     void setInActive();
     void Move();
     void Draw();
+    void SpawnSmallCubes(float duration, int cubeCount);
+    int GetHealth() { return health ; }
+    int SetInvaderHealth(int health);
 private:
     bool active;
+    int health;
+  //  Game* l;
+    struct SmallCube 
+    {
+        Vector2 position;
+        float size;
+        Color color;
+    };
 
+    std::vector<SmallCube> cubes;
 };

@@ -15,6 +15,8 @@ enum GameState
     PlayerControls,
     GameOver,
     GoBackToMainMenu,
+    TransitionToPlaying,
+    YouLose,
     Exit
 };
 
@@ -34,9 +36,9 @@ public:
     void Draw();
     void HandleCollisions(std::vector<Bullet>& bullets, std::vector<Invader>& invaders);
 
+    int level;
     void SetWidthAndHeight(int width, int height);
 private:
-    int level;
     void StartLevel(int level);
     void CheckLevel();  
     bool allInvadersDefeated;

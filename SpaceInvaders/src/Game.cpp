@@ -39,7 +39,7 @@ void Game::Draw()
     case GameState::Playing:
         ship->Draw();
         DrawText(("Level " + std::to_string(level)).c_str(), 10, 10, 40, WHITE);
-        // Display correct level
+
         for (auto& bullet : bullets)
         {
             bullet.Draw();
@@ -57,12 +57,26 @@ void Game::Draw()
 
     case GameState::LevelTransition:
         DrawText(("Level " + std::to_string(level)).c_str(), 10, 10, 40, WHITE);
-      
         break;
-    case GoBackToMainMenu:
+
+    case GameState::GoBackToMainMenu:
         m_Menu->Draw();
         m_Menu->UpDate();
         break;
+
+    case GameState::TransitionToPlaying:
+        break;
+    case  GameState::YouLose:
+        DrawText("Your Dead!", 200, 100, 50, YELLOW);
+        break;
+
+    case GameState::GameOver:
+        DrawText("You Beat the game!", 200, 100, 50, YELLOW);
+        DrawText("Press Enter to go back to main menu", 100, 300, 30, YELLOW);
+
+      
+        break;
+
     case GameState::Exit:
         break;
 
@@ -82,41 +96,63 @@ void Game::HandleCollisions(std::vector<Bullet>& bullets, std::vector<Invader>& 
                 if (invader.getActive())
                 {
                     Rectangle bulletRect = { bullet.position.x, bullet.position.y, bullet.width, bullet.height };
-                    Rectangle invaderRect = { invader.position.x, invader.position.y, invader.width, invader.height };
+                    Rectangle invaderRect = { (float)invader.position.x, (float)invader.position.y, (float)invader.width, (float)invader.height };
+                    Rectangle shiprRect = { (float)ship->position.x ,(float)ship->position.y, (float)ship->width, (float)ship->height };
 
                     if (CheckCollisionRecs(bulletRect, invaderRect))
                     {
                         bullet.SetInActive();
                         invader.setInActive();
-
-                        allInvadersDefeated = true; 
+                        invader.SpawnSmallCubes(10, 5);
+                        allInvadersDefeated = true;
+                         
+                        
 
                         for (auto& inv : invaders)
                         {
                             if (inv.getActive())
                             {
-                                allInvadersDefeated = false; 
+                                allInvadersDefeated = false;
                                 break;
                             }
                         }
 
-                        // Check the flag after the loop
                         if (allInvadersDefeated)
                         {
-                            if (level >= 3)  // End the game after level 3
+                            if (level >= 3)
                             {
-                                state = GameState::GameOver;  // Transition to the GameOver state
+                                state = GameState::GameOver;
+                                m_Menu->GameOverScreen();
+                                level = 1;
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    for (int j = 0; j < 11; j++)
+                                    {
+                                        invaders.push_back(Invader(50 + j * 50, 50 + i * 50, 40, 20, RED));
+                                    }
+                                }
+
                                 
                             }
                             else
                             {
                                 CheckLevel();
-
                             }
+                                
+
+
                         }
-                            
+                    }
+
+                    if (CheckCollisionRecs(invaderRect,shiprRect))
+                    {
+                        state = GameState::YouLose;
+                        ship->getInActive();
                     }
                 }
+
+                
+
             }
         }
     }
@@ -129,9 +165,10 @@ void Game::SetWidthAndHeight(int width, int height)
 
 void Game::StartLevel(int level)
 {
-    invaders.clear(); 
+   
 
-    level = this->level;
+    this->level = level; 
+
     for (int i = 0; i < 5; i++)
     {
         for (int j = 0; j < 11; j++)
@@ -144,6 +181,7 @@ void Game::StartLevel(int level)
     {
         for (auto& invader : invaders)
         {
+             invader.SetInvaderHealth(2);
             invader.speed = 5;
         }
     }
@@ -152,8 +190,10 @@ void Game::StartLevel(int level)
     {
         for (auto& invader : invaders)
         {
+           invader.SetInvaderHealth(3);
             invader.speed = 7;
         }
+               
     }
 }
 
@@ -162,44 +202,42 @@ void Game::CheckLevel()
     std::cout << "All invaders defeated!\n";
     level++;
     state = GameState::LevelTransition;
-       
+
 }
 
-
 void Game::Update()
-{
+    {
+        
     switch (state)
     {
     case GameState::Menu:
         m_Menu->UpDate();
         if (m_Menu->GetPlayerSelected())
         {
-            if (m_Menu->GetPlayerSelection() == 1)
+            if (!m_Menu->GetInControlMenu())
             {
-                state = GameState::Playing;
-            }
-            if (m_Menu->GetPlayerSelection() == 2)
-            {
-                state = GameState::PlayerControls;
+                if (m_Menu->GetPlayerSelection() == 0)
+                {
+                    state = GameState::Playing;
+                }
             }
         }
+     
+    
         break;
     case GameState::LevelTransition:
-        
         if (allInvadersDefeated)
         {
-            DrawText(("Level " + std::to_string(level) + " Starting...  " ).c_str(), 200, 300, 50, YELLOW);
-            DrawText( "Please press enter", 200, 400, 50, YELLOW);
-
+            DrawText(("Level " + std::to_string(level) + " Starting...").c_str(), 200, 300, 50, YELLOW);
+            DrawText("Please press Enter", 200, 400, 50, YELLOW);
         }
-       
-        if (IsKeyPressed(KEY_ENTER)) 
+
+        if (IsKeyPressed(KEY_ENTER))
         {
-            StartLevel(level);  
-            state = GameState::Playing;  
+            StartLevel(level);
+            state = GameState::Playing;
         }
         break;
-
 
     case GameState::PlayerControls:
         if (m_Menu->GetControlSeleted() == 0 && IsKeyPressed(KEY_ENTER))
@@ -209,18 +247,23 @@ void Game::Update()
         break;
 
     case GameState::GameOver:
+       
 
-            DrawText( "You Won!", 200, 100, 50, YELLOW);
-            DrawText( "Press enter to go back to main menu", 100, 300, 30, YELLOW);
-            if (IsKeyPressed(KEY_ENTER))
+        if (IsKeyPressed(KEY_ENTER))
+        {
+            if (m_Menu->GetPlayerSelection() == 0)
             {
-                state = GameState::GoBackToMainMenu;
-                //tate = GameState::Menu;
-                
-
+                state = GameState::Menu;
             }
-            
+            else if (m_Menu->GetPlayerSelection() == 1 )
+            {
+                state = GameState::Playing;
+               
+            }
+            m_Menu->ResetPlayerSelection();
+        }   
         break;
+
     case GameState::Playing:
         if (IsKeyPressed(KEY_SPACE))
         {
@@ -238,16 +281,10 @@ void Game::Update()
         }
 
         HandleCollisions(bullets, invaders);
-       
-        break;
-        
-        break;
-    case GameState::Exit:
+        ship->Move();
         break;
 
     default:
         break;
     }
-
-    ship->Move();
 }

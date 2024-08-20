@@ -38,7 +38,8 @@ public:
 	void DrawPlayerControls();
 	bool GetInControlMenu() { return inControlMenu; }
 	int GetControlSeleted() { return controlSelection; }
-	
+	bool GameOverScreen() { return gameOverSceen = true; }
+	void  ResetPlayerSelection() { Playerselected = false; }
 private:
 	
 	int controlSelection;
@@ -49,6 +50,7 @@ private:
 	int textPositionY;
 	int startGameTextPositionY;
 	int exitGameTextPositionY;
+	bool gameOverSceen;
 	int textSize;
 	
 	

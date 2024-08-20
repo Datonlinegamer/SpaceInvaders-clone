@@ -3,7 +3,7 @@
 
 
 MainMenu::MainMenu()
-    :selectedItem(Selected::One)
+    :selectedItem(Selected::Zero)
     ,controlSelection(Controls::controls)
     , screenHeight(100)
     , screenWidth(100)
@@ -20,7 +20,7 @@ MainMenu::MainMenu()
 MainMenu::MainMenu(int width, int height)
     : screenWidth(width)
     , screenHeight(height)
-    , selectedItem(1)
+    , selectedItem(0)
     ,controlSelection(0)
     ,Playerselected(false)
 {
@@ -39,13 +39,20 @@ void MainMenu::Draw()
         
       
             
-            DrawText("Space Invaders", screenWidth / textPositionX, screenHeight / textPositionY, textSize, BLUE);
-            DrawText("1. Start Game", screenWidth  / textPositionX, screenHeight / startGameTextPositionY  + textSize, 20, selectedItem ==Selected::One ? RED : DARKGRAY);
-            DrawText("2. Controls", screenWidth  / textPositionX, screenHeight / 4  + textSize, 20, selectedItem == Selected::Two? RED : DARKGRAY);
-            DrawText("3. Exit", screenWidth  / textPositionX, screenHeight /exitGameTextPositionY + 80, 20, selectedItem == Selected::Three ? RED : DARKGRAY);
 
+            if (inControlMenu == true)
+            {
+                DrawPlayerControls();
+            }
+            else
+            {
 
-        
+                DrawText("Space Invaders", screenWidth / textPositionX, screenHeight / textPositionY, textSize, BLUE);
+                DrawText("1. Start Game", screenWidth  / textPositionX, screenHeight / startGameTextPositionY  + textSize, 20, selectedItem ==Selected::Zero ? RED : DARKGRAY);
+                DrawText("2. Controls", screenWidth  / textPositionX, screenHeight / 4  + textSize, 20, selectedItem == Selected::One? RED : DARKGRAY);
+                DrawText("3. Exit", screenWidth  / textPositionX, screenHeight /exitGameTextPositionY + 80, 20, selectedItem == Selected::Two ? RED : DARKGRAY);
+
+            }
         
     }
     //else if (currentScreen == GameMenu::startGame)
@@ -72,7 +79,7 @@ void MainMenu::DrawPlayerControls()
 {
          ClearBackground(BLACK);
           
-    DrawText("\nBack", 10, 70, 40, controlSelection == Controls::controls ? RED : DARKGRAY);
+    DrawText("\nBack", 10, 70, 40, RED);
     DrawText("Press Space to shoot: ", 2, 0, 40, BLUE); 
     DrawText("\nPress wasd to move: ", 1, 30, 40, BLUE);
         
@@ -80,8 +87,8 @@ void MainMenu::DrawPlayerControls()
 
 void MainMenu::UpDate()
 {
-    //if (currentScreen == GameMenu::Title)  // Uncommented this condition
-   // {
+    
+
     if (IsKeyPressed(KEY_DOWN))
     {
         selectedItem++;
@@ -97,6 +104,10 @@ void MainMenu::UpDate()
     {
         selectedItem = Selected::Two;  
     }
+    if (selectedItem > Selected::Two)
+    {
+        selectedItem = Selected::Three;
+    }
 
     
   
@@ -105,11 +116,21 @@ void MainMenu::UpDate()
     if (IsKeyPressed(KEY_ENTER))
     {
         Playerselected = true;
-        if (controlSelection )
+        if (selectedItem ==1&& inControlMenu ==false)
         {
             inControlMenu = true;
 
         }
+        else if(inControlMenu)
+        {
+            inControlMenu = false;
+        }
+        if (selectedItem ==2)
+        {
+            CloseWindow();
+        }
+
+        
        
        
         /*  switch (selectedItem)
