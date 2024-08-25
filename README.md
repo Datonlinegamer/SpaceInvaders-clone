@@ -1,3 +1,3 @@
-# SpaceInvaders
+# SpaceInvaders (clone)
 
 
