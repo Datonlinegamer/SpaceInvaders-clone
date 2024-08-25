@@ -133,7 +133,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\DebugHelper.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Invaders.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -143,7 +145,9 @@
     <ClCompile Include="src\SpaceShipBase.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AudioManager.h" />
     <ClInclude Include="src\Bullet.h" />
+    <ClInclude Include="src\DebugHelper.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Invaders.h" />
     <ClInclude Include="src\MainMenu.h" />

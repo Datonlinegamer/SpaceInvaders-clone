@@ -1,8 +1,9 @@
 #pragma once
 #include "Game.h"
-enum Controls
+enum death
 {
-	controls = 0
+	Retry = 0,
+	Gobacktomainmenu =1
 };
 enum Selected
 {
@@ -10,7 +11,9 @@ enum Selected
 	One =1,
 	Two =2,
 	Three =3,
-	four =4
+	four =4,
+	five,
+	six
 };
 enum GameMenu
 {
@@ -33,25 +36,35 @@ public:
 	bool WindowShouldClose();
 	void UpDate();
 	bool GetPlayerSelected() const{ return Playerselected; }
-	int GetPlayerSelection() const { return selectedItem; }
+	int GetPlayerSelection()  { return selectedItem; }
+	int SetPlayerSelection() { return selectedItem; }
 	void SetSize(int width, int height);
 	void DrawPlayerControls();
 	bool GetInControlMenu() { return inControlMenu; }
 	int GetControlSeleted() { return controlSelection; }
 	bool GameOverScreen() { return gameOverSceen = true; }
 	void  ResetPlayerSelection() { Playerselected = false; }
-private:
-	
-	int controlSelection;
-	bool inControlMenu;
-	bool Playerselected;
-	int selectedItem;
+	void  ResetPlayerSelectionFromDealthScreen() { Playerselected = true; }
+	bool  SetInMainMenu(bool menu) { return inMainMenu; }
+	bool getInDeathScreen() { return inDeathMenu; }
+	bool setInDealthScreen(bool death) { return inDeathMenu = death; }
+	void HandleDealthInput();
+	bool IsInMainMenu() { return inMainMenu; }
+	void YourDead();
 	int textPositionX;
 	int textPositionY;
-	int startGameTextPositionY;
-	int exitGameTextPositionY;
-	bool gameOverSceen;
 	int textSize;
+	int exitGameTextPositionY;
+	int deathitem;
+	bool Playerselected;
+private:
+	bool inDeathMenu;
+	bool inMainMenu;
+	int controlSelection;
+	bool inControlMenu;
+	int selectedItem;
+	int startGameTextPositionY;
+	bool gameOverSceen;
 	
 	
 };

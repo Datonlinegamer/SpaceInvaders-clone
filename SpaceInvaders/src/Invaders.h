@@ -3,7 +3,7 @@
 #include "raylib.h"
 #include "SpaceShipBase.h"
 #include <vector>
-class Game;
+
 class Invader 
 {
 public:
@@ -22,10 +22,11 @@ public:
     void SpawnSmallCubes(float duration, int cubeCount);
     int GetHealth() { return health ; }
     int SetInvaderHealth(int health);
+    int SetSpeed(float newSpeed) { return speed = newSpeed; };
 private:
     bool active;
     int health;
-  //  Game* l;
+
     struct SmallCube 
     {
         Vector2 position;

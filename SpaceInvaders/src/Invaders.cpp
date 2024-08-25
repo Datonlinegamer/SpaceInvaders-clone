@@ -1,5 +1,6 @@
 #include "Invaders.h"
 #include "Game.h"
+#include "AudioManager.h"
 
 Invader::Invader(int startX, int startY, int w, int h, Color c)
     :movingRight(false)
@@ -16,6 +17,8 @@ Invader::Invader(int startX, int startY, int w, int h, Color c)
    
 }
 
+
+
 bool Invader::getActive()
 {
     return active;
@@ -23,8 +26,9 @@ bool Invader::getActive()
 
 void Invader::setInActive()
 {
-    if (--health <= 0)  // Decrease health and check if it should be inactive
+    if (--health <= 0)  
     {
+        AudioManager::GetInstance()->Dead();
         active = false;
     }
      
@@ -61,7 +65,8 @@ void Invader::Draw()
     }
   
 }
-  void Invader::SpawnSmallCubes(float duration, int cubeCount) {
+  void Invader::SpawnSmallCubes(float duration, int cubeCount) 
+  {
     float spawnTime = 0.0f;
     float elapsedTime = 0.0f;
     cubes.clear(); 
@@ -85,11 +90,11 @@ void Invader::Draw()
     while (elapsedTime < duration)
     {
 
-        // Update time
+       
         float deltaTime = GetFrameTime();
         elapsedTime += deltaTime;
 
-        // Exit after the duration
+        
         if (elapsedTime >= duration) break;
     }
 }

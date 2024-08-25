@@ -15,6 +15,7 @@ public:
     void Draw() override;
     bool getActive();
     bool getInActive();
+
 private:
   bool active;
   bool inActive;

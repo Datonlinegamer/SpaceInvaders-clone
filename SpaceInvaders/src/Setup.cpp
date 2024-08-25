@@ -8,6 +8,7 @@ void GameSetUp::Run()
     const int screenWidth = 800;
     const int screenHeight = 600;
     InitWindow(screenWidth, screenHeight, "Space Invaders");
+    InitAudioDevice();
     game.SetWidthAndHeight(screenWidth, screenHeight);
     
    
@@ -28,7 +29,7 @@ void GameSetUp::Run()
 
         EndDrawing();
     }
-   
+    CloseAudioDevice();
     CloseWindow();
 
    
