@@ -4,19 +4,19 @@
 class Bullet
 {
 public:
-    Vector2 position;
-    int width;
-    int height;
-    Color color;
+    Vector2 m_Position;
+    int m_Width;
+    int m_Height;
+    Color m_Color;
     
     bool getActive();
     void SetInActive();
     Bullet();
     Bullet(float startX, float startY, int w, int h, Color c);
-    void Move();
+    void BulletMovment();
     void Draw();
 
 private:
-    bool active;
-    bool inActive;
+    bool m_Active;
+    bool m_InActive;
 };

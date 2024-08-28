@@ -26,45 +26,41 @@ class MainMenu
 {	
 public:
 	MainMenu();
-	int screenWidth;
-	int screenHeight;
-	GameMenu currentScreen;
+	int m_ScreenWidth;
+	int m_ScreenHeight;
 	MainMenu(int width, int height);
 	~MainMenu() {}
-	bool ShouldExit();
 	void Draw();
-	bool WindowShouldClose();
 	void UpDate();
-	bool GetPlayerSelected() const{ return Playerselected; }
-	int GetPlayerSelection()  { return selectedItem; }
-	int SetPlayerSelection() { return selectedItem; }
+	bool GetPlayerSelected() const{ return m_Playerselected; }
+	int GetPlayerSelection()  { return m_SelectedItem; }
+	int SetPlayerSelection() { return m_SelectedItem; }
 	void SetSize(int width, int height);
 	void DrawPlayerControls();
 	bool GetInControlMenu() { return inControlMenu; }
-	int GetControlSeleted() { return controlSelection; }
-	bool GameOverScreen() { return gameOverSceen = true; }
-	void  ResetPlayerSelection() { Playerselected = false; }
-	void  ResetPlayerSelectionFromDealthScreen() { Playerselected = true; }
-	bool  SetInMainMenu(bool menu) { return inMainMenu; }
-	bool getInDeathScreen() { return inDeathMenu; }
-	bool setInDealthScreen(bool death) { return inDeathMenu = death; }
+	int GetControlSeleted() { return m_ControlSelection; }
+	bool GameOverScreen() { return m_GameOverSceen = true; }
+	void  ResetPlayerSelection() { m_Playerselected = false; }
+	void  ResetPlayerSelectionFromDealthScreen() { m_Playerselected = true; }
+	bool  SetInMainMenu(bool menu) { return m_InMainMenu; }
+	bool getInDeathScreen() { return m_InDeathMenu; }
+	bool setInDealthScreen(bool death) { return m_InDeathMenu = death; }
 	void HandleDealthInput();
-	bool IsInMainMenu() { return inMainMenu; }
+	bool IsInMainMenu() { return m_InMainMenu; }
 	void YourDead();
-	int textPositionX;
-	int textPositionY;
-	int textSize;
-	int exitGameTextPositionY;
-	int deathitem;
-	bool Playerselected;
+	int m_TextPositionX;
+	int m_TextPositionY;
+	int m_TextSize;
+	int m_ExitGameTextPositionY;
 private:
-	bool inDeathMenu;
-	bool inMainMenu;
-	int controlSelection;
+	bool m_Playerselected;
+	bool m_InDeathMenu;
+	bool m_InMainMenu;
+	int m_ControlSelection;
 	bool inControlMenu;
-	int selectedItem;
-	int startGameTextPositionY;
-	bool gameOverSceen;
+	int m_SelectedItem;
+	int m_StartGameTextPositionY;
+	bool m_GameOverSceen;
 	
 	
 };

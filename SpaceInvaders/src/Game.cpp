@@ -7,40 +7,39 @@
 #include <string>
 #include "DebugHelper.h"
 #include "AudioManager.h"
+
 const int shipWidth = 50;
 const int shipHeight = 10;
 const float PositionX = 400.0f;
 const float PositionY = 550.0f;
 
 Game::Game()
-    : level(1),
-    allInvadersDefeated(false),
-    state(GameState::Menu) // Initialize state to Menu
+    : m_Level(1),
+    m_AllInvadersDefeated(false),
+    m_State(GameState::Menu) // Initialize state to Menu
 {
-    
-    m_Menu = new MainMenu();
-    ship = new Ship(PositionX, PositionY, shipWidth, shipHeight, BLUE);
-    StartLevel(level);
+    m_pMenu = new MainMenu();
+    m_pShip = new Ship(PositionX, PositionY, shipWidth, shipHeight, BLUE);
+    StartLevel(m_Level);
 }
 
 Game::~Game()
 {
-    delete m_Menu;
-    delete ship;
-    
+    delete m_pMenu;
+    delete m_pShip;
 }
 
 void Game::Draw()
 {
-    switch (state)
+    switch (m_State)
     {
     case GameState::Menu:
-        m_Menu->Draw();
+        m_pMenu->Draw();
         break;
 
     case GameState::Playing:
-        ship->Draw();
-        DrawText(("Level " + std::to_string(level)).c_str(), 10, 10, 40,YELLOW);
+        m_pShip->Draw();
+        DrawText(("Level " + std::to_string(m_Level)).c_str(), 10, 10, 40, YELLOW);
 
         for (auto& bullet : bullets)
         {
@@ -54,30 +53,29 @@ void Game::Draw()
         break;
 
     case GameState::PlayerControls:
-        m_Menu->DrawPlayerControls();
+        m_pMenu->DrawPlayerControls();
         break;
 
     case GameState::LevelTransition:
-        DrawText(("Level " + std::to_string(level)).c_str(), 10, 10, 40, YELLOW);
+        DrawText(("Level " + std::to_string(m_Level)).c_str(), 10, 10, 40, YELLOW);
         break;
 
     case GameState::GoBackToMainMenu:
-        m_Menu->Draw();
-        m_Menu->UpDate();
+        m_pMenu->Draw();
+        m_pMenu->UpDate();
         break;
 
     case GameState::TransitionToPlaying:
         break;
-    case  GameState::YouLose:
-        DrawText("Your Dead!", 200, 100, 50, RED);
-       m_Menu-> YourDead();
+
+    case GameState::YouLose:
+        DrawText("You Died!", 200, 100, 50, RED);
+        m_pMenu->YourDead();
         break;
 
-    case GameState::GameOver:
-        DrawText("You Beat the game!", 200, 100, 50, YELLOW);
+    case GameState::YouWon:
+        DrawText("You Beat the Game!", 200, 100, 50, YELLOW);
         DrawText("Press Enter to go back to main menu", 100, 300, 30, YELLOW);
-
-      
         break;
 
     case GameState::Exit:
@@ -90,43 +88,45 @@ void Game::Draw()
 
 void Game::HandleCollisions(std::vector<Bullet>& bullets, std::vector<Invader>& invaders)
 {
+    Rectangle bulletRect, invaderRect, shipRect;
+
     for (auto& bullet : bullets)
     {
         if (bullet.getActive())
         {
+            bulletRect = { bullet.m_Position.x, bullet.m_Position.y, (float)bullet.m_Width, (float)bullet.m_Height };
+
             for (auto& invader : invaders)
             {
                 if (invader.getActive())
                 {
-                    Rectangle bulletRect = {(float) bullet.position.x,(float) bullet.position.y, (float)bullet.width,(float)bullet.height };
-                    invaderRect = { (float)invader.position.x, (float)invader.position.y, (float)invader.width, (float)invader.height };
-                    shiprRect = { (float)ship->position.x ,(float)ship->position.y, (float)ship->width, (float)ship->height };
+                    invaderRect = { invader.m_Position.x, invader.m_Position.y, (float) invader.m_width,(float) invader.m_Height };
+                    shipRect = { m_pShip->m_Position.x, m_pShip->m_Position.y, (float)m_pShip->m_Width, (float)m_pShip->m_Height };
 
                     if (CheckCollisionRecs(bulletRect, invaderRect))
                     {
                         bullet.SetInActive();
                         invader.setInActive();
                         invader.SpawnSmallCubes(10, 5);
-                        allInvadersDefeated = true;
+                        m_AllInvadersDefeated = true;
                         AudioManager::GetInstance()->EnemiesHit();
-
-
+                        
                         for (auto& inv : invaders)
                         {
                             if (inv.getActive())
                             {
-                                allInvadersDefeated = false;
+                                m_AllInvadersDefeated = false;
                                 break;
                             }
                         }
 
-                        if (allInvadersDefeated)
+                        if (m_AllInvadersDefeated)
                         {
-                            if (level >= 3)
+                            if (m_Level >= 3)
                             {
-                                state = GameState::GameOver;
-                                m_Menu->GameOverScreen();
-                                level = 1;
+                                m_State = GameState::YouWon;
+                                m_pMenu->GameOverScreen();
+                                m_Level = 1;
                                 for (int i = 0; i < 5; i++)
                                 {
                                     for (int j = 0; j < 11; j++)
@@ -134,51 +134,49 @@ void Game::HandleCollisions(std::vector<Bullet>& bullets, std::vector<Invader>& 
                                         invaders.push_back(Invader(50 + j * 50, 50 + i * 50, 40, 20, RED));
                                     }
                                 }
-
-
                             }
                             else
                             {
                                 CheckLevel();
                             }
-
-
-
                         }
                     }
-
-                    if (CheckCollisionRecs(invaderRect, shiprRect))
-                    {
-
-                            state = GameState::YouLose;
-                            ship->getInActive();
-                            bullet.getActive() == false;
-                            invaders.clear();
-
-                        
-                        
-
-                    }
                 }
-
-                
-
             }
+        }
+    }
+}
+
+void Game::HandleCollisionsBetweenInvaderandShip(Ship* ship, std::vector<Invader>& invaders)
+{
+    if (!ship) return;
+
+    Rectangle shipRect = { ship->m_Position.x, ship->m_Position.y, ship->m_Width, ship->m_Height };
+
+    for (auto& invader : invaders)
+    {
+        Rectangle invaderRect = { invader.m_Position.x, invader.m_Position.y, invader.m_width, invader.m_Height };
+
+        if (CheckCollisionRecs(shipRect, invaderRect))
+        {
+            m_State = GameState::YouLose;
+            ship->SetInactive();
+            invaders.clear();
+            break;
         }
     }
 }
 
 void Game::SetWidthAndHeight(int width, int height)
 {
-    m_Menu->SetSize(width, height);
+    m_pMenu->SetSize(width, height);
 }
-
 
 void Game::StartLevel(int level)
 {
-   
+    this->m_Level = level;
 
-    this->level = level; 
+    invaders.clear();
 
     for (int i = 0; i < 5; i++)
     {
@@ -192,8 +190,8 @@ void Game::StartLevel(int level)
     {
         for (auto& invader : invaders)
         {
-             invader.SetInvaderHealth(2);
-             invader.SetSpeed(6);
+            invader.SetInvaderHealth(2);
+            invader.SetSpeed(6);
         }
     }
 
@@ -201,192 +199,148 @@ void Game::StartLevel(int level)
     {
         for (auto& invader : invaders)
         {
-           invader.SetInvaderHealth(3);
-           invader.SetSpeed(9);
+            invader.SetInvaderHealth(3);
+            invader.SetSpeed(9);
         }
-               
     }
 }
 
 void Game::CheckLevel()
 {
     std::cout << "All invaders defeated!\n";
-    level++;
-    state = GameState::LevelTransition;
-
+    m_Level++;
+    m_State = GameState::LevelTransition;
 }
-void Game:: RestartGame()
+
+void Game::RestartGame()
 {
+    m_Level = 1;
+    m_AllInvadersDefeated = false;
+    m_State = GameState::Playing;
 
-        level = 1;  
-        allInvadersDefeated = false;
-        state = GameState::Playing;  
+    bullets.clear();
+    invaders.clear();
 
-     
-        bullets.clear();
-        invaders.clear();
+    delete m_pShip;
+    m_pShip = new Ship(PositionX, PositionY, shipWidth, shipHeight, BLUE);
 
-      
-        delete ship;
-        ship = new Ship(PositionX, PositionY, shipWidth, shipHeight, BLUE);
-
-        StartLevel(level);
-    
+    StartLevel(m_Level);
 }
+
 void Game::Update()
-    {
-        
-    switch (state)
+{
+    switch (m_State)
     {
     case GameState::Menu:
-        m_Menu->SetInMainMenu(true);
-        m_Menu->UpDate();
-        if (m_Menu->GetPlayerSelected())
+        m_pMenu->SetInMainMenu(true);
+        m_pMenu->UpDate();
+        if (m_pMenu->GetPlayerSelected())
         {
-            if (!m_Menu->GetInControlMenu())
+            if (!m_pMenu->GetInControlMenu())
             {
-                if (m_Menu->GetPlayerSelection() == 0)
+                if (m_pMenu->GetPlayerSelection() == 0)
                 {
-                    state = GameState::Playing;
-                   
+                    m_State = GameState::Playing;
                 }
-                
             }
         }
-      
-    
         break;
+
     case GameState::LevelTransition:
-        if (allInvadersDefeated)
+        if (m_AllInvadersDefeated)
         {
-            DrawText(("Level " + std::to_string(level) + " Starting...").c_str(), 200, 300, 50, YELLOW);
-            DrawText("Please press Enter", 200, 400, 50, YELLOW);
+            DrawText(("Level " + std::to_string(m_Level) + " Starting...").c_str(), 150, 100, 50, YELLOW);
+            DrawText("Please press Enter", 150, 200, 50, YELLOW);
         }
 
         if (IsKeyPressed(KEY_ENTER))
         {
-            StartLevel(level);
-            state = GameState::Playing;
+            StartLevel(m_Level);
+            m_State = GameState::Playing;
         }
         break;
 
     case GameState::PlayerControls:
-        if (m_Menu->GetControlSeleted() == 0 && IsKeyPressed(KEY_ENTER))
+        if (m_pMenu->GetControlSeleted() == 0 && IsKeyPressed(KEY_ENTER))
         {
-            state = GameState::Menu;
+            m_State = GameState::Menu;
         }
         break;
 
-    case GameState::GameOver:
-       
-
+    case GameState::YouWon:
         if (IsKeyPressed(KEY_ENTER))
         {
-            if (m_Menu->GetPlayerSelection() == 0)
+            if (m_pMenu->GetPlayerSelection() == 0)
             {
-                state = GameState::Menu;
+                m_State = GameState::Menu;
             }
-            else if (m_Menu->GetPlayerSelection() == 1 )
+            else if (m_pMenu->GetPlayerSelection() == 1)
             {
-                state = GameState::Playing;
-                m_Menu->setInDealthScreen(false);
+                m_State = GameState::Playing;
+                m_pMenu->setInDealthScreen(false);
             }
-            m_Menu->ResetPlayerSelection();
-        }   
+            m_pMenu->ResetPlayerSelection();
+        }
         break;
+
     case GameState::YouLose:
-        state = GameState::YouLose;
-        m_Menu->setInDealthScreen(true);
-        m_Menu->HandleDealthInput();
+        m_pMenu->setInDealthScreen(true);
+        m_pMenu->HandleDealthInput();
         if (IsKeyPressed(KEY_ENTER))
         {
-             m_Menu->GetPlayerSelection();
-
-            if (m_Menu->GetPlayerSelection() == 0)
+            if (m_pMenu->GetPlayerSelection() == 0)
             {
                 RestartGame();
             }
-            else if (m_Menu->GetPlayerSelection() == 1)
+            else if (m_pMenu->GetPlayerSelection() == 1)
             {
-                if (m_Menu->IsInMainMenu())
+                if (m_pMenu->IsInMainMenu())
                 {
-                    m_Menu->SetInMainMenu(true);
-                    state = GameState::GoBackToMainMenu;
-                    m_Menu->setInDealthScreen(false);
-                    
+                    m_pMenu->SetInMainMenu(true);
+                    m_State = GameState::GoBackToMainMenu;
+                    m_pMenu->setInDealthScreen(false);
                 }
-                        
             }
         }
         break;
-    case GameState:: GoBackToMainMenu:               
-        if (m_Menu->SetInMainMenu(true))
+
+    case GameState::GoBackToMainMenu:
+        if (m_pMenu->IsInMainMenu())
         {
-            if (IsKeyPressed(KEY_UP) )
+            if (IsKeyPressed(KEY_UP))
             {
-                m_Menu->GetPlayerSelection() ==0;
+                m_pMenu->SetPlayerSelection() == 0;
             }
-            if (IsKeyPressed(KEY_ENTER)&& m_Menu->GetPlayerSelection() ==0)
+            if (IsKeyPressed(KEY_ENTER) && m_pMenu->GetPlayerSelection() == 0)
             {
                 RestartGame();
             }
         }
- 
-      
         break;
 
     case GameState::Playing:
-        if (!CheckCollisionRecs(invaderRect, shiprRect) )
+        if (!CheckCollisionRecs(m_InvaderRect, m_ShipRect))
         {
             if (IsKeyPressed(KEY_SPACE))
             {
-            bullets.push_back(Bullet(ship->position.x + ship->width / 2 - 2, ship->position.y, 5, 10, WHITE));
-            AudioManager::GetInstance()->ShipShootingSFX();
-
+                bullets.push_back(Bullet(m_pShip->m_Position.x + m_pShip->m_Width / 2 - 2, m_pShip->m_Position.y, 5, 10, WHITE));
+                AudioManager::GetInstance()->ShipShootingSFX();
             }
         }
 
         for (auto& bullet : bullets)
         {
-            bullet.Move();
+            bullet.BulletMovment();
         }
 
         for (auto& invader : invaders)
         {
-            invader.Move();
-        }
-      
-        //Debug menu
-      /*     
-        if (IsKeyPressed(KEY_F6)) 
-        {
-           
-            increaseSpeed = !increaseSpeed;
-
-          
+            invader.InvaderMovment();
         }
 
-        if (increaseSpeed)
-        {
-            for (auto& invader : invaders)
-            {
-                
-                debugger->IncreaseInvadersSpeed(invader);
-            }
-        }
-        else
-        {
-            for (auto& invader : invaders)
-            {
-               
-                debugger->decreaseInvadersSpeed(invader);  
-            }
-        }*/
-        //Debug menu
-            
-       
+        HandleCollisionsBetweenInvaderandShip(m_pShip, invaders);
         HandleCollisions(bullets, invaders);
-        ship->Move();
+        m_pShip->ShipMovment();
         break;
 
     default:

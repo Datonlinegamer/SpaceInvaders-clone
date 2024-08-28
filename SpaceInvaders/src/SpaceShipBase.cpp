@@ -1,10 +1,10 @@
 #include "SpaceShipBase.h"
 
 SpaceShipBase::SpaceShipBase(float startX, float startY, int w, int h, Color c)
-    : width(w)
-    ,height(h)
-    ,color(c)
+    : m_Width(w)
+    ,m_Height(h)
+    ,m_Color(c)
 {
-    position = { startX, startY };
+    m_Position = { startX, startY };
  
 }

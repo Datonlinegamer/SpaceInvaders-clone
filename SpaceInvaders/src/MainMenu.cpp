@@ -5,27 +5,25 @@
 
 
 MainMenu::MainMenu()
-    :selectedItem(Selected::Zero)
-    ,deathitem(death::Retry)
-    , screenHeight(100)
-    , screenWidth(100)
-    ,Playerselected(false)
-    ,textPositionX(4)
-    ,textPositionY(6)
-    ,startGameTextPositionY(5)
-    ,exitGameTextPositionY(4)
-    ,textSize(40)
+    :m_SelectedItem(Selected::Zero)
+    , m_ScreenHeight(100)
+    , m_ScreenWidth(100)
+    ,m_Playerselected(false)
+    ,m_TextPositionX(4)
+    ,m_TextPositionY(6)
+    ,m_StartGameTextPositionY(5)
+    ,m_ExitGameTextPositionY(4)
+    ,m_TextSize(40)
     ,inControlMenu(false)
-    ,inDeathMenu(false)
+    ,m_InDeathMenu(false)
     
 {
 }
 MainMenu::MainMenu(int width, int height)
-    : screenWidth(width)
-    , screenHeight(height)
-    , selectedItem(0)
-   // ,controlSelection(0)
-    ,Playerselected(false)
+    : m_ScreenWidth(width)
+    , m_ScreenHeight(height)
+    , m_SelectedItem(0)
+    ,m_Playerselected(false)
 {
    
 }
@@ -49,11 +47,11 @@ void MainMenu::Draw()
             }
             else
             {
-                inMainMenu = true;
-                DrawText("Space Invaders", screenWidth / textPositionX, screenHeight / textPositionY, textSize, BLUE);
-                DrawText("1. Start Game", screenWidth  / textPositionX, screenHeight / startGameTextPositionY  + textSize, 20, selectedItem ==Selected::Zero ? RED : DARKGRAY);
-                DrawText("2. Controls", screenWidth  / textPositionX, screenHeight / 4  + textSize, 20, selectedItem == Selected::One? RED : DARKGRAY);
-                DrawText("3. Exit", screenWidth  / textPositionX, screenHeight /exitGameTextPositionY + 80, 20, selectedItem == Selected::Two ? RED : DARKGRAY);
+                m_InMainMenu = true;
+                DrawText("Space Invaders", m_ScreenWidth / m_TextPositionX, m_ScreenHeight / m_TextPositionY, m_TextSize, BLUE);
+                DrawText("1. Start Game", m_ScreenWidth  / m_TextPositionX, m_ScreenHeight / m_StartGameTextPositionY  + m_TextSize, 20, m_SelectedItem ==Selected::Zero ? RED : DARKGRAY);
+                DrawText("2. Controls", m_ScreenWidth  / m_TextPositionX, m_ScreenHeight / 4  + m_TextSize, 20, m_SelectedItem == Selected::One? RED : DARKGRAY);
+                DrawText("3. Exit", m_ScreenWidth  / m_TextPositionX, m_ScreenHeight /m_ExitGameTextPositionY + 80, 20, m_SelectedItem == Selected::Two ? RED : DARKGRAY);
 
             }
            
@@ -71,14 +69,14 @@ void MainMenu::Draw()
 }
 void MainMenu:: SetSize(int width, int height)
 {
-    screenHeight = height;
-    screenWidth = width;
+    m_ScreenHeight = height;
+    m_ScreenWidth = width;
 }
 
 void MainMenu::DrawPlayerControls()
 {
          ClearBackground(BLACK);
-      inMainMenu = false;
+      m_InMainMenu = false;
     DrawText("\nBack", 10, 70, 40, RED);
     DrawText("Press Space to shoot: ", 2, 0, 40, BLUE); 
     DrawText("\nPress ad to move: ", 1, 30, 40, BLUE);
@@ -87,10 +85,10 @@ void MainMenu::DrawPlayerControls()
 
 void MainMenu::YourDead()
 {
-    if (inDeathMenu== true)
+    if (m_InDeathMenu== true)
     {
-    DrawText("Retry",screenWidth / textPositionX, screenHeight / 4 + textSize, 20,selectedItem== death::Retry? RED : DARKGRAY);
-    DrawText("Back to main menu",screenWidth / textPositionX, 250, 20, selectedItem== death::Gobacktomainmenu? RED : DARKGRAY);
+        DrawText("Retry",m_ScreenWidth / m_TextPositionX, m_ScreenHeight / 4 + m_TextSize, 20,m_SelectedItem== death::Retry? RED : DARKGRAY);
+        DrawText("Back to main menu",m_ScreenWidth / m_TextPositionX, 250, 20, m_SelectedItem== death::Gobacktomainmenu? RED : DARKGRAY);
     }
     
     
@@ -102,27 +100,27 @@ void MainMenu::YourDead()
 }
 void MainMenu::HandleDealthInput()
 {
-    if (selectedItem< death::Retry)
+    if (m_SelectedItem< death::Retry)
     {
-       selectedItem = death::Gobacktomainmenu;
+       m_SelectedItem = death::Gobacktomainmenu;
     }
-    else if (selectedItem > death::Gobacktomainmenu)
+    else if (m_SelectedItem > death::Gobacktomainmenu)
     {
-        selectedItem = death::Retry;
+        m_SelectedItem = death::Retry;
     }
 
    
     
         if (IsKeyPressed(KEY_DOWN))
         {
-            selectedItem =  death::Gobacktomainmenu;
-            AudioManager::GetInstance()->menuIten();
+            m_SelectedItem =  death::Gobacktomainmenu;
+            AudioManager::GetInstance()->menuItem();
         }
 
         if (IsKeyPressed(KEY_UP))
         {
-            AudioManager::GetInstance()->menuIten();
-            selectedItem = death::Retry;
+            AudioManager::GetInstance()->menuItem();
+            m_SelectedItem = death::Retry;
         }
 
     
@@ -134,24 +132,24 @@ void MainMenu::UpDate()
 
     if (IsKeyPressed(KEY_DOWN))
     {
-        selectedItem++;
-        AudioManager::GetInstance()->menuIten();
+        m_SelectedItem++;
+        AudioManager::GetInstance()->menuItem();
     }
 
     if (IsKeyPressed(KEY_UP))
     {
-        AudioManager::GetInstance()->menuIten();
-        selectedItem--;
+        AudioManager::GetInstance()->menuItem();
+        m_SelectedItem--;
     }
         
   
-    if (selectedItem > Selected::Three)
+    if (m_SelectedItem > Selected::Three)
     {
-        selectedItem = Selected::Two;  
+        m_SelectedItem = Selected::Two;  
     }
-    if (selectedItem > Selected::Two)
+    if (m_SelectedItem > Selected::Two)
     {
-        selectedItem = Selected::Three;
+        m_SelectedItem = Selected::Three;
     }
 
     
@@ -159,9 +157,9 @@ void MainMenu::UpDate()
 
     if (IsKeyPressed(KEY_ENTER))
     {
-        Playerselected = true;
+        m_Playerselected = true;
         
-        if (selectedItem == 1 && !inControlMenu && inMainMenu)
+        if (m_SelectedItem == 1 && !inControlMenu && m_InMainMenu)
         {
            
             inControlMenu = true;
@@ -172,19 +170,19 @@ void MainMenu::UpDate()
             inControlMenu = false;
         }
 
-        if (selectedItem < Selected::One)
+        if (m_SelectedItem < Selected::One)
         {
            
-            inMainMenu =true;
-           selectedItem = Selected::Zero;
-           Playerselected = true;
+            m_InMainMenu =true;
+           m_SelectedItem = Selected::Zero;
+           m_Playerselected = true;
 
         }
-        if (selectedItem==1 &&inDeathMenu ==false)
+        if (m_SelectedItem==1 &&m_InDeathMenu ==false)
         {
-            inDeathMenu = true;
+            m_InDeathMenu = true;
         }
-        if (selectedItem ==2)
+        if (m_SelectedItem ==2)
         {
             CloseWindow();
         }

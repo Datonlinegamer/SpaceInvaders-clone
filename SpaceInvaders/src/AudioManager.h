@@ -12,7 +12,7 @@ public:
 	void ShipShootingSFX();
 	void EnemiesHit();
 	void Dead();
-	void menuIten();
+	void menuItem();
 
 private:
 	Sound  m_ShipShootingSFX;

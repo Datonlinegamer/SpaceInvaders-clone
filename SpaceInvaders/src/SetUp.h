@@ -7,8 +7,8 @@ class GameSetUp
 public:
 	
 	void Run();
-	bool Runing;
+	bool m_Runing;
 private:
 	
-	Game game;
+	Game m_Game;
 };

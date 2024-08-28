@@ -9,16 +9,23 @@ enum keyinput
 class Ship : public SpaceShipBase
 {
 public:
-    keyinput GetPressedKey();
     Ship(float startX, float startY, int w, int h, Color c);
-    void Move() override;
+    int Width;
+    int Height;
+    Rectangle GetRect() const {
+        return Rectangle{ m_Position.x, m_Position.y };
+    }
+    keyinput GetPressedKey();
+    void ShipMovment() override;
     void Draw() override;
     bool getActive();
     bool getInActive();
+    void SetInactive() { m_Active = false; }
 
 private:
-  bool active;
-  bool inActive;
+  bool m_Active;
+  bool m_InActive;
+  float  m_ShipSpeed;
 
 
 };

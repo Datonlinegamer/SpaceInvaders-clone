@@ -3,7 +3,9 @@
 
 
 Ship::Ship(float startX, float startY, int w, int h, Color c)
-    : SpaceShipBase(startX, startY, w, h, c), active( true )
+    : SpaceShipBase(startX, startY, w, h, c),
+    m_Active( true )
+    ,m_ShipSpeed(300.0f)
 {
 
 }
@@ -21,15 +23,15 @@ keyinput Ship::GetPressedKey()
     return key;
 }
 
-void Ship::Move()
+void Ship::ShipMovment()
 {
     switch (GetPressedKey())
     {
     case keyleft:
-        position.x -= 5.0f;
+        m_Position.x -= m_ShipSpeed *GetFrameTime();
         break;
     case keyright:
-        position.x += 5.0f;
+        m_Position.x += m_ShipSpeed * GetFrameTime();
         break;
     case key :
     
@@ -37,13 +39,13 @@ void Ship::Move()
     }
 
 
-    if (position.x < 0)
+    if (m_Position.x < 0)
     {
-        position.x = 0;
+        m_Position.x = 0;
     }
-    if (position.x > GetScreenWidth() - width)
+    if (m_Position.x > GetScreenWidth() - m_Width)
     {
-     position.x = GetScreenWidth() - width;
+     m_Position.x = GetScreenWidth() - m_Width;
     }
 
     
@@ -53,16 +55,17 @@ void Ship::Draw()
 {
     if (getActive())
     {
-        DrawRectangle(position.x, position.y, width, height, color);
+        DrawRectangle(m_Position.x, m_Position.y, m_Width, m_Height, m_Color);
     }
 }
 
 bool Ship::getActive()
 {
-    return active;
+    return m_Active;
 }
 
 bool Ship::getInActive()
 {
-    return active = false;
+    
+    return m_Active  == false;
 }

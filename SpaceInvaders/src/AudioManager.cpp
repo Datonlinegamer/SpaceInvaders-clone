@@ -58,7 +58,7 @@ void AudioManager::Dead()
     PlaySound(m_Dead);
 }
 
-void AudioManager::menuIten()
+void AudioManager::menuItem()
 {
     PlaySound(m_Menu);
 }

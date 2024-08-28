@@ -3,16 +3,18 @@
 #include "AudioManager.h"
 
 Invader::Invader(int startX, int startY, int w, int h, Color c)
-    :movingRight(false)
-    , speed(3.0f)
-    , active(true)
-    , width(w)
-    , height(h)
-    , color(c)
-    , health(1)
+    :m_movingRight(false)
+    , m_InvaderSpeed(3.0f)
+    , m_Active(true)
+    , m_width(w)
+    , m_Height(h)
+    , m_Color(c)
+    , m_Health(1)
+    ,m_SpawnTime(0.0f)
+    ,m_ElapsedTime(0.0f)
     
 {
-    position = {(float) startX,(float) startY };
+    m_Position = {(float) startX,(float) startY };
       
    
 }
@@ -21,37 +23,37 @@ Invader::Invader(int startX, int startY, int w, int h, Color c)
 
 bool Invader::getActive()
 {
-    return active;
+    return m_Active;
 }
 
 void Invader::setInActive()
 {
-    if (--health <= 0)  
+    if (--m_Health <= 0)  
     {
         AudioManager::GetInstance()->Dead();
-        active = false;
+        m_Active = false;
     }
      
 }
 
-void Invader::Move() 
+void Invader::InvaderMovment() 
 {
-    if (movingRight)
+    if (m_movingRight)
     {
-        position.x += speed;
-        if (position.x + width >= GetScreenWidth()) 
+        m_Position.x += m_InvaderSpeed;
+        if (m_Position.x + m_width >= GetScreenWidth()) 
         {
-            movingRight = false;
-            position.y += height; 
+            m_movingRight = false;
+            m_Position.y += m_Height; 
         }
     }
     else
     {
-        position.x -= speed;
-        if (position.x <= 0) 
+        m_Position.x -= m_InvaderSpeed;
+        if (m_Position.x <= 0) 
         {
-            movingRight = true;
-            position.y += height; 
+            m_movingRight = true;
+            m_Position.y += m_Height; 
         }
     }
 }
@@ -59,48 +61,47 @@ void Invader::Move()
 
 void Invader::Draw() 
 {
-    if (active) 
+    if (m_Active) 
     {
-        DrawRectangle((float)position.x, (float)position.y,(float) width, (float)height, color);
+        DrawRectangle((float)m_Position.x, (float)m_Position.y,(float) m_width, (float)m_Height, m_Color);
     }
   
 }
   void Invader::SpawnSmallCubes(float duration, int cubeCount) 
   {
-    float spawnTime = 0.0f;
-    float elapsedTime = 0.0f;
+    
     cubes.clear(); 
 
     
     for (int i = 0; i < cubeCount; i++) 
     {
         SmallCube cube;
-        cube.position = { (float)GetRandomValue(position.x, position.y), (float)GetRandomValue(position.x, position.y) };
-        cube.size = 10.0f; 
-        cube.color = color;
+        cube.m_Position = { (float)GetRandomValue(m_Position.x, m_Position.y), (float)GetRandomValue(m_Position.x, m_Position.y) };
+        cube.m_Size = 10.0f; 
+        cube.m_Color = m_Color;
 
         cubes.push_back(cube);
     }
     for (auto& cube : cubes)
     {
-        DrawRectangle(cube.position.x, cube.position.y, cube.size, cube.size, cube.color);
+        DrawRectangle(cube.m_Position.x, cube.m_Position.y, cube.m_Size, cube.m_Size, cube.m_Color);
     }
 
    
-    while (elapsedTime < duration)
+    while (m_ElapsedTime < duration)
     {
 
        
         float deltaTime = GetFrameTime();
-        elapsedTime += deltaTime;
+        m_ElapsedTime += deltaTime;
 
         
-        if (elapsedTime >= duration) break;
+        if (m_ElapsedTime >= duration) break;
     }
 }
 
 int Invader::SetInvaderHealth(int health)
 {
-    this->health = health;
-    return this->health;
+    this->m_Health = health;
+    return this->m_Health;
 }

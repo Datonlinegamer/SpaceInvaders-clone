@@ -4,41 +4,41 @@
 
 bool Bullet::getActive()
 {
-    return active;
+    return m_Active;
 }
 
 void Bullet::SetInActive()
 {
-    active = false;
+    m_Active = false;
 }
 
 Bullet::Bullet(float startX, float startY, int w, int h, Color c)
-    :active(true)
-    ,width(w)
-    ,height(h)
-    ,color(c)
+    :m_Active(true)
+    ,m_Width(w)
+    ,m_Height(h)
+    ,m_Color(c)
 {
-    position = { startX, startY };
+    m_Position = { startX, startY };
     
     
 }
 
-void Bullet::Move() 
+void Bullet::BulletMovment() 
 {
-    if (active) 
+    if (m_Active) 
     {
-        position.y -= 10.0f;
-        if (position.y < 0) 
+        m_Position.y -= 10.0f;
+        if (m_Position.y < 0) 
         {
-            active = false;
+            m_Active = false;
         }
     }
 }
 
 void Bullet::Draw() 
 {
-    if (active) 
+    if (m_Active) 
     {
-        DrawRectangle(position.x, position.y, width, height, color);
+        DrawRectangle(m_Position.x, m_Position.y, m_Width, m_Height, m_Color);
     }
 }

@@ -1,8 +1,8 @@
 #include <iostream>
 #include "SetUp.h"
 
-GameSetUp runGame;
+GameSetUp m_RunGame;
 int main()
 { 
-	runGame.Run();
+	m_RunGame.Run();
 }

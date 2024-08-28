@@ -15,44 +15,41 @@ enum GameState
     Playing,
     LevelTransition,
     PlayerControls,
-    GameOver,
+    YouWon,
     GoBackToMainMenu,
     TransitionToPlaying,
     YouLose,
     Exit
 };
-//enum DeathScreen
-//{
-//    Retry=5,
-//    Backtomainmeu
-//};
+
 class Game
 {
 public:
-    GameState state;
-    Ship* ship;
+    GameState m_State;
+    Ship* m_pShip;
     std::vector<Bullet> bullets;
     std::vector<Invader> invaders;
-    MainMenu* m_Menu;
-    Invader* invader;
+    MainMenu* m_pMenu;
+    Invader* m_pInvader;
 
     Game();
     ~Game();
     void Update();
     void Draw();
     void HandleCollisions(std::vector<Bullet>& bullets, std::vector<Invader>& invaders);
+    void HandleCollisionsBetweenInvaderandShip(Ship* ship , std::vector<Invader>& invaders);
 
-    int level;
+    int m_Level;
     void SetWidthAndHeight(int width, int height);
 private:
-    DebugHelper* debugger;
+    DebugHelper* m_pDebugger;
     void RestartGame();
     void StartLevel(int level);
     void CheckLevel();  
-    bool allInvadersDefeated;
-    bool increaseSpeed = false;
-    Rectangle shiprRect;
-    Rectangle invaderRect;
+    bool m_AllInvadersDefeated;
+    bool m_IncreaseSpeed = false;
+    Rectangle m_ShipRect;
+    Rectangle m_InvaderRect;
 };
 
 		

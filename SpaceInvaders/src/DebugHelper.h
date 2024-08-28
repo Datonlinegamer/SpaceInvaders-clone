@@ -12,5 +12,5 @@ void decreaseInvadersSpeed(Invader& invader);
 
 protected:
 
-	Invader invader;
+	Invader m_Invader;
 };
