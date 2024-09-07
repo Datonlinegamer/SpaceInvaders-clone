@@ -6,6 +6,7 @@ This project is a clone of the classic "Space Invaders" game, built using the Ra
 Features:
 Player Ship: Move left and right to dodge enemy attacks and shoot upwards.
 Enemy Waves: Multiple enemies descend towards the player in classic Space Invaders formation.
+
 Shooting Mechanics: Players can shoot projectiles to destroy enemies.
 
 Health Mechanic: In levels 2 and 3, invaders have more health, requiring the player to shoot them multiple times.
