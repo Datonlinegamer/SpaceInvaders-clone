@@ -11,11 +11,10 @@ SFX: Sound effects are implemented through out the game.
 Collision Detection: Player will be destroy when invaders overlap player.
 Score System: Earn points by destroying enemies.
 Game Over: The game ends if the enemies reach the player or if the player's ship is destroyed.
-Tech Stack:
 
+Tech Stack:
 Raylib: A simple and easy-to-use library to learn game programming.
 C/C++: Core logic and game mechanics are implemented using C/C++.
-OpenGL: Raylib leverages OpenGL for rendering.
 ![screenshot000](https://github.com/user-attachments/assets/ca381353-a857-41c5-8ade-410131629d6a)
 ![screenshot004](https://github.com/user-attachments/assets/ff3c516d-c3c5-4c78-bc02-18f7d7fa301b)
 ![screenshot006](https://github.com/user-attachments/assets/65a4414d-4e68-4fec-8351-f294deface4b)
