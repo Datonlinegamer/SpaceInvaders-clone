@@ -9,7 +9,7 @@ Enemy Waves: Multiple enemies descend towards the player in classic Space Invade
 
 Shooting Mechanics: Players can shoot projectiles to destroy enemies.
 
-UI: Implenmented A main menu,dealth screen menu and a next level menu.
+UI: Implenmented A main menu, dealth screen menu and a next level menu.
 
 Health Mechanic: In levels 2 and 3, invaders have more health, requiring the player to shoot them multiple times.
 SFX: Sound effects are implemented through out the game.
